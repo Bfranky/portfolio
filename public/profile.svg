@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="50%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <linearGradient id="darkBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14171d" />
+      <stop offset="100%" stop-color="#090a0d" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="100" fill="url(#darkBg)" />
+  <circle cx="100" cy="100" r="96" fill="none" stroke="url(#grad)" stroke-width="4" />
+  <!-- Stylized Monogram Avatar -->
+  <text x="100" y="118" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="64" font-weight="800" fill="url(#grad)" text-anchor="middle" letter-spacing="-2">BO</text>
+  <!-- Cyber accent nodes -->
+  <circle cx="100" cy="22" r="5" fill="#38bdf8" />
+  <circle cx="168" cy="148" r="4" fill="#f59e0b" />
+</svg>

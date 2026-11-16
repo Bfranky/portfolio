@@ -4,6 +4,8 @@ export interface Project {
   tagline: string;
   url: string;
   repoUrl?: string;
+  screenshotUrl: string;
+  videoUrl?: string;
   description: string;
   category: 'Healthcare' | 'Hospitality & Dining' | 'E-Commerce & Retail' | 'Enterprise & SaaS' | 'EdTech & Media';
   stack: string[];
@@ -24,6 +26,7 @@ export interface SkillCategory {
 export interface ProfileData {
   handle: string;
   name: string;
+  avatarUrl: string;
   roleHeadline: string;
   subHeadline: string;
   bio: string;
@@ -43,52 +46,62 @@ export interface ProfileData {
 export const portfolioData: ProfileData = {
   handle: "Bfranky / nexus-digital",
   name: "Blessed Ogobor",
+  avatarUrl: "/profile.jpg",
   roleHeadline: "Full-Stack Engineer",
-  subHeadline: "Specialized in Next.js & Modern UX",
-  bio: "I build and ship production web platforms — from multi-role healthcare portals and real-time dining reservation systems to high-conversion e-commerce and SaaS products. Based in Nigeria, building for global clients.",
+  subHeadline: "Specialized in React, TanStack & Next.js",
+  bio: "I specialize in React and the TanStack ecosystem (TanStack Query, TanStack Table), and mainly run on Next.js to architect and ship production web platforms. From multi-role clinical healthcare portals and real-time reservation engines to automotive inventory showrooms and high-scale SaaS applications.",
   location: "Lagos / Delta, Nigeria",
   timezone: "Africa/Lagos (WAT, UTC+1)",
   availableForHire: true,
-  tags: ["Next.js 14/15", "TypeScript", "React", "Supabase", "Tailwind CSS", "Vercel Deployments", "UX Engineering"],
+  tags: [
+    "Next.js (Primary)",
+    "React 18/19",
+    "TanStack Query",
+    "TanStack Table",
+    "TypeScript",
+    "Tailwind CSS",
+    "Supabase",
+    "Vercel Deployments"
+  ],
   whatsappNumber: "+234 906 932 1502",
   whatsappUrl: "https://wa.me/2349069321502?text=Hi%20Blessed,%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.",
   email: "blessedogobor@gmail.com",
   githubUrl: "https://github.com/Bfranky",
   stats: [
     { label: "Production Apps", value: "24+", description: "Deployed live on Vercel" },
-    { label: "Uptime & Delivery", value: "99.9%", description: "Fast, resilient architecture" },
-    { label: "Industries Served", value: "6+", description: "Healthcare, Dining, EdTech & SaaS" },
-    { label: "Response Time", value: "<2h", description: "Direct WhatsApp & Email access" }
+    { label: "Core Framework", value: "Next.js", description: "Main full-stack driver" },
+    { label: "State & Data", value: "TanStack", description: "Query, Table & React" },
+    { label: "Delivery & Uptime", value: "99.9%", description: "Fast, resilient architecture" }
   ],
   skillCategories: [
     {
-      title: "Frontend Engineering",
+      title: "Core Stack: React, TanStack & Next.js",
       iconName: "layout",
       skills: [
-        { name: "Next.js (App & Pages)", level: "Advanced", desc: "Server components, streaming, dynamic routing & SSR" },
-        { name: "React 18 & TypeScript", level: "Advanced", desc: "Type-safe UI systems, custom hooks, robust state handling" },
-        { name: "Tailwind CSS & Modern CSS", level: "Advanced", desc: "Responsive design, micro-animations, glassmorphism & dark mode" },
-        { name: "Performance & UX", level: "Expert", desc: "Core Web Vitals, top-load scroll managers, responsive ergonomics" }
+        { name: "Next.js (App Router & SSR)", level: "Advanced", desc: "Main production framework — server components, streaming, dynamic edge routes" },
+        { name: "React 18/19 & Architecture", level: "Specialist", desc: "Component composition, custom hooks, concurrent rendering & performance optimization" },
+        { name: "TanStack Query (React Query)", level: "Specialist", desc: "Server state hydration, cache invalidation, optimistic updates & polling" },
+        { name: "TanStack Table & Headless UI", level: "Specialist", desc: "Complex filtering, sorting, client/server pagination & virtualized large datasets" }
       ]
     },
     {
-      title: "Backend & Cloud Services",
+      title: "Backend, Database & Security",
       iconName: "database",
       skills: [
-        { name: "Supabase & PostgreSQL", level: "Proficient", desc: "Relational data modeling, RLS policies, real-time subscriptions" },
-        { name: "Authentication & RBAC", level: "Proficient", desc: "Multi-role patient/doctor/admin workflows, session security" },
-        { name: "REST APIs & Integrations", level: "Advanced", desc: "Third-party APIs, webhooks, WhatsApp direct routing" },
-        { name: "Vercel & Edge Deployment", level: "Advanced", desc: "Edge functions, image optimization, custom domain management" }
+        { name: "Supabase & PostgreSQL", level: "Proficient", desc: "Relational data modeling, RLS row-level security, real-time subscriptions" },
+        { name: "Authentication & Multi-Role RBAC", level: "Proficient", desc: "Patient/doctor/staff role segregation, secure sessions, verification funnels" },
+        { name: "REST APIs & Webhooks", level: "Advanced", desc: "Third-party APIs, automated WhatsApp payload dispatches, order webhooks" },
+        { name: "Vercel & Edge Deployment", level: "Advanced", desc: "Automated CI/CD, edge middleware, custom domains & DNS configuration" }
       ]
     },
     {
-      title: "Product & Vertical Expertise",
+      title: "Product Engineering & Conversion UX",
       iconName: "sparkles",
       skills: [
-        { name: "Real-time Booking Engines", level: "Specialist", desc: "Table reservation, clinical appointments, date/time locking" },
-        { name: "E-Commerce & Digital Menus", level: "Specialist", desc: "Filterable product catalogs, cart state, WhatsApp order handoff" },
-        { name: "Multi-step Onboarding", level: "Specialist", desc: "Student enrollment, intake questionnaires, verification gates" },
-        { name: "Brand & Showcase Portals", level: "Specialist", desc: "High-impact visual narratives, agency case studies, gallery systems" }
+        { name: "Real-time Booking Engines", level: "Specialist", desc: "Table reservation, clinical appointments, date/time conflict locking" },
+        { name: "Filterable Catalogs & E-Commerce", level: "Specialist", desc: "Multi-parameter instant search, persistent cart state, WhatsApp order handoff" },
+        { name: "Tailwind CSS & Micro-Animations", level: "Advanced", desc: "Mobile-first responsive design, glassmorphism, ergonomic UI interactions" },
+        { name: "Multi-Step Onboarding Funnels", level: "Specialist", desc: "Student cohort enrollment, document verification, multi-stage forms" }
       ]
     }
   ],
@@ -99,9 +112,10 @@ export const portfolioData: ProfileData = {
       tagline: "Multi-role Hospital & Patient Clinical Management Portal",
       url: "https://jtho.vercel.app",
       repoUrl: "https://github.com/Bfranky/jtho",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fjtho.vercel.app?w=800",
       description: "Enterprise healthcare platform with patient-facing consultation booking, physician directory, department triage, and a staff clinical notes workspace.",
       category: "Healthcare",
-      stack: ["Next.js", "TypeScript", "Tailwind CSS", "Patient Portal", "RBAC"],
+      stack: ["Next.js", "React", "TanStack Query", "TypeScript", "Tailwind CSS", "RBAC"],
       featured: true,
       highlightMetric: "Multi-Role Hospital Portal",
       features: [
@@ -119,9 +133,10 @@ export const portfolioData: ProfileData = {
       title: "UGET Academy",
       tagline: "Edu-Tech Enrollment & Student Verification Platform",
       url: "https://uget-academy-nine.vercel.app",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fuget-academy-nine.vercel.app?w=800",
       description: "End-to-end technical education portal featuring authenticated student registration, curriculum review, verification workflows, and security-hardened data pipelines.",
       category: "EdTech & Media",
-      stack: ["Next.js", "Supabase", "Auth & Security", "Tailwind CSS"],
+      stack: ["Next.js", "React", "Supabase", "TanStack Query", "Auth & Security", "Tailwind CSS"],
       featured: true,
       highlightMetric: "Secure Student Intake",
       features: [
@@ -140,9 +155,10 @@ export const portfolioData: ProfileData = {
       tagline: "Luxury Dining & Real-Time Table Reservation System",
       url: "https://palms-rho.vercel.app",
       repoUrl: "https://github.com/Bfranky/palms",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fpalms-rho.vercel.app?w=800",
       description: "High-end dining portal featuring an interactive table reservation engine (party size, date, time slot, seating zone), interactive dietary filterable menu, and private event booking.",
       category: "Hospitality & Dining",
-      stack: ["Next.js", "Interactive Booking UI", "Tailwind CSS", "UX Design"],
+      stack: ["Next.js", "React", "TanStack Table", "Interactive Booking UI", "Tailwind CSS"],
       featured: true,
       highlightMetric: "Real-Time Seating Engine",
       features: [
@@ -161,9 +177,10 @@ export const portfolioData: ProfileData = {
       tagline: "Automotive Dealership & Vehicle Inventory Platform",
       url: "https://merit-auto.vercel.app",
       repoUrl: "https://github.com/Bfranky/merit-auto",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fmerit-auto.vercel.app?w=800",
       description: "Comprehensive vehicle showroom and dealership platform with instant multi-parameter inventory search (make, year, price, mileage), detailed vehicle dossiers, and test-drive booking.",
       category: "Enterprise & SaaS",
-      stack: ["Next.js", "Lucide React", "Tailwind CSS", "Vehicle Catalog"],
+      stack: ["Next.js", "React", "TanStack Query", "Lucide React", "Tailwind CSS"],
       featured: true,
       highlightMetric: "Smart Inventory Filter",
       features: [
@@ -182,9 +199,10 @@ export const portfolioData: ProfileData = {
       tagline: "Nightlife Reservations & Instant WhatsApp Concierge",
       url: "https://deoffice-app.vercel.app",
       repoUrl: "https://github.com/Bfranky/deoffice-app",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fdeoffice-app.vercel.app?w=800",
       description: "Vibrant nightlife and lounge web application featuring table reservations, VIP bottle service menu with live pricing, and direct WhatsApp concierge order routing.",
       category: "Hospitality & Dining",
-      stack: ["Next.js", "WhatsApp API", "Table Booking", "Tailwind CSS"],
+      stack: ["Next.js", "React", "WhatsApp API", "Table Booking", "Tailwind CSS"],
       featured: true,
       highlightMetric: "WhatsApp Concierge Integration",
       features: [
@@ -203,9 +221,10 @@ export const portfolioData: ProfileData = {
       tagline: "High-Performance Manga Reader & Discovery Hub",
       url: "https://manga-olive-six.vercel.app",
       repoUrl: "https://github.com/Bfranky/manga",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fmanga-olive-six.vercel.app?w=800",
       description: "Modern digital comic reader engineered for fluid browsing, chapter navigation, hydration-optimized rendering, and lightning-fast image delivery.",
       category: "EdTech & Media",
-      stack: ["Next.js", "Tailwind PostCSS", "Dynamic Caching", "React 18"],
+      stack: ["Next.js", "React 18", "TanStack Query", "Tailwind PostCSS", "Dynamic Caching"],
       featured: true,
       highlightMetric: "Hydration-Optimized Reader",
       features: [
@@ -224,9 +243,10 @@ export const portfolioData: ProfileData = {
       tagline: "Clinical Department Directory & Doctor Availability Matrix",
       url: "https://faithcircle-three.vercel.app",
       repoUrl: "https://github.com/Bfranky/faithcircle",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Ffaithcircle-three.vercel.app?w=800",
       description: "Comprehensive medical center platform covering ten specialized clinical departments, on-call doctor matrices, emergency contacts, and streamlined appointment inquiries.",
       category: "Healthcare",
-      stack: ["Next.js", "Healthcare UI", "Tailwind CSS", "Responsive Design"],
+      stack: ["Next.js", "React", "TanStack Query", "Healthcare UI", "Tailwind CSS"],
       featured: true,
       highlightMetric: "10+ Clinical Departments",
       features: [
@@ -245,9 +265,10 @@ export const portfolioData: ProfileData = {
       tagline: "Next-Gen SaaS Platform with ScrollManager Orchestration",
       url: "https://new-c-eight.vercel.app",
       repoUrl: "https://github.com/Bfranky/new-c",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fnew-c-eight.vercel.app?w=800",
       description: "High-conversion SaaS application engineered with custom ScrollManager mechanics for scroll retention, fluid page transitions, and modern product showcase modules.",
       category: "Enterprise & SaaS",
-      stack: ["Next.js", "ScrollManager", "TypeScript", "Performance Tuning"],
+      stack: ["Next.js", "React", "ScrollManager", "TypeScript", "Performance Tuning"],
       featured: true,
       highlightMetric: "Custom ScrollManager",
       features: [
@@ -266,9 +287,10 @@ export const portfolioData: ProfileData = {
       tagline: "Luxury Convention Hall & Banquet Showcase",
       url: "https://johnpop-client.vercel.app",
       repoUrl: "https://github.com/Bfranky/johnpop-client",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fjohnpop-client.vercel.app?w=800",
       description: "Premier event venue showcase for weddings, galas, and corporate summits — featuring hall capacity visualizers, photo galleries, and real guest review carousels.",
       category: "Hospitality & Dining",
-      stack: ["Next.js", "Gallery UI", "Event Venue", "Tailwind CSS"],
+      stack: ["Next.js", "React", "Gallery UI", "Event Venue", "Tailwind CSS"],
       featured: false,
       features: [
         "Venue capacity visualizer for banquet vs conference seating",
@@ -286,6 +308,7 @@ export const portfolioData: ProfileData = {
       tagline: "Boutique Fashion & Editorial Beauty E-Commerce",
       url: "https://fairies.vercel.app",
       repoUrl: "https://github.com/Bfranky/fairies",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Ffairies.vercel.app?w=800",
       description: "Editorial e-commerce experience curated for high-end fashion and beauty products, with seasonal lookbooks, product zoom, and sleek bag drawer.",
       category: "E-Commerce & Retail",
       stack: ["Next.js", "React", "Luxury E-Commerce", "Tailwind CSS"],
@@ -306,9 +329,10 @@ export const portfolioData: ProfileData = {
       tagline: "Artisan Seafood Restaurant & Express Call-to-Order",
       url: "https://fishvile.vercel.app",
       repoUrl: "https://github.com/Bfranky/fishvile",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Ffishvile.vercel.app?w=800",
       description: "Ultra-fast culinary landing platform featuring dynamic grill menu, daily catch highlights, store hours, and instant call-to-order tap targets.",
       category: "Hospitality & Dining",
-      stack: ["Next.js", "Mobile UX", "Tailwind CSS", "Conversion Engine"],
+      stack: ["Next.js", "React", "Mobile UX", "Tailwind CSS"],
       featured: false,
       features: [
         "Streamlined mobile-first menu with appetizing food photography",
@@ -326,9 +350,10 @@ export const portfolioData: ProfileData = {
       tagline: "Gourmet Small Chops & Finger-Food Delivery System",
       url: "https://chizzychops.vercel.app",
       repoUrl: "https://github.com/Bfranky/chizzychops",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fchizzychops.vercel.app?w=800",
       description: "Food delivery ordering app with refined UX — intuitive 'Back to Menu' contextual navigation, platter quantity counters, and fast WhatsApp order packaging.",
       category: "Hospitality & Dining",
-      stack: ["Next.js", "UX Architecture", "Tailwind CSS", "React"],
+      stack: ["Next.js", "React", "UX Architecture", "Tailwind CSS"],
       featured: false,
       features: [
         "Contextual 'Back to Menu' navigation replacing ambiguous close buttons",
@@ -346,9 +371,10 @@ export const portfolioData: ProfileData = {
       tagline: "Wood-Fired Pizza Customizer & Quick Checkout",
       url: "https://pizza-g-one.vercel.app",
       repoUrl: "https://github.com/Bfranky/pizza-g",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fpizza-g-one.vercel.app?w=800",
       description: "Interactive artisan pizzeria platform with custom topping selectors, crust choice, cart state management, and streamlined checkout handoff.",
       category: "Hospitality & Dining",
-      stack: ["Next.js", "Tailwind CSS v3", "Cart State", "Fast Checkout"],
+      stack: ["Next.js", "React", "Tailwind CSS v3", "Cart State"],
       featured: false,
       features: [
         "Interactive pizza size and crust preference selector",
@@ -366,6 +392,7 @@ export const portfolioData: ProfileData = {
       tagline: "Bespoke Event Catering & Custom Platter Ordering",
       url: "https://iyadunni-chopz.vercel.app",
       repoUrl: "https://github.com/Bfranky/iyadunni-chopz",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fiyadunni-chopz.vercel.app?w=800",
       description: "Catering brand showcase with custom party platter builders, event calendar booking, pastry galleries, and automated quotation requests.",
       category: "Hospitality & Dining",
       stack: ["Next.js", "React", "Event Catering", "Tailwind CSS"],
@@ -386,9 +413,10 @@ export const portfolioData: ProfileData = {
       tagline: "Technology & Education Insights Publishing Platform",
       url: "https://uget-blog.vercel.app",
       repoUrl: "https://github.com/Bfranky/uget-blog",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fuget-blog.vercel.app?w=800",
       description: "Fast editorial publication engine with clean markdown typography, topic clustering, responsive mobile reading experience, and newsletter capture.",
       category: "EdTech & Media",
-      stack: ["Next.js", "MDX / CMS", "Tailwind CSS", "SEO"],
+      stack: ["Next.js", "React", "MDX / CMS", "Tailwind CSS", "SEO"],
       featured: false,
       features: [
         "Distraction-free reading experience with estimated read times",
@@ -406,9 +434,10 @@ export const portfolioData: ProfileData = {
       tagline: "Modern Urban Streetwear & Minimalist E-Commerce",
       url: "https://dihat.vercel.app",
       repoUrl: "https://github.com/Bfranky/dihat",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fdihat.vercel.app?w=800",
       description: "Minimalist fashion web store with dynamic sizing guides, quick lookbook previews, smooth slide cart, and high-conversion mobile checkout flow.",
       category: "E-Commerce & Retail",
-      stack: ["Next.js", "Next Layouts", "Tailwind CSS", "E-Commerce"],
+      stack: ["Next.js", "React", "Next Layouts", "Tailwind CSS"],
       featured: false,
       features: [
         "Curated lookbook grid with quick product popups",
@@ -426,6 +455,7 @@ export const portfolioData: ProfileData = {
       tagline: "Scandinavian Furniture & Architectural Space Design",
       url: "https://cozy-mu.vercel.app",
       repoUrl: "https://github.com/Bfranky/cozy",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fcozy-mu.vercel.app?w=800",
       description: "Warm, aesthetic home décor & interior showroom highlighting bespoke furniture collections, room planner visualizers, and direct designer consult booking.",
       category: "E-Commerce & Retail",
       stack: ["Next.js", "React", "Micro-Interactions", "Tailwind CSS"],
@@ -446,9 +476,10 @@ export const portfolioData: ProfileData = {
       tagline: "Vibrant Mexican-Latin Grill & Cocktail Nightlife Hub",
       url: "https://caliente-murex.vercel.app",
       repoUrl: "https://github.com/Bfranky/caliente",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fcaliente-murex.vercel.app?w=800",
       description: "Vibrant, atmospheric dining experience featuring Latin-inspired aesthetics, happy hour schedules, VIP booth reservations, and mobile-optimized menus.",
       category: "Hospitality & Dining",
-      stack: ["Next.js", "CSS Animations", "Responsive UI", "Tailwind CSS"],
+      stack: ["Next.js", "React", "CSS Animations", "Responsive UI", "Tailwind CSS"],
       featured: false,
       features: [
         "Happy hour and themed nightlife event promotion banners",
@@ -466,6 +497,7 @@ export const portfolioData: ProfileData = {
       tagline: "Modern African Quick-Service Dining Storefront",
       url: "https://akara-theta.vercel.app",
       repoUrl: "https://github.com/Bfranky/akara",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fakara-theta.vercel.app?w=800",
       description: "Contemporary quick-service dining digital storefront celebrating African street delicacies with rapid order routing, nutritional highlights, and localized payment cues.",
       category: "Hospitality & Dining",
       stack: ["Next.js", "React", "Mobile Commerce", "Tailwind CSS"],
@@ -486,6 +518,7 @@ export const portfolioData: ProfileData = {
       tagline: "Digital Innovation Agency & Interactive Case Study Lab",
       url: "https://youngbox-app.vercel.app",
       repoUrl: "https://github.com/Bfranky/youngbox-app",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fyoungbox-app.vercel.app?w=800",
       description: "Dynamic agency portal spotlighting client case studies, technology advisory offerings, creative production capabilities, and interactive lead intake.",
       category: "Enterprise & SaaS",
       stack: ["Next.js", "React", "Agency Engine", "Tailwind CSS"],
@@ -506,9 +539,10 @@ export const portfolioData: ProfileData = {
       tagline: "Building Information Modeling & Structural Engineering",
       url: "https://bim-peach.vercel.app",
       repoUrl: "https://github.com/Bfranky/bim",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fbim-peach.vercel.app?w=800",
       description: "High-spec corporate portal for architectural engineering, 3D structural modeling consultation, project lifecycle stages, and contractor liaison.",
       category: "Enterprise & SaaS",
-      stack: ["Next.js", "Architectural UX", "React", "Tailwind CSS"],
+      stack: ["Next.js", "React", "Architectural UX", "Tailwind CSS"],
       featured: false,
       features: [
         "Project lifecycle breakdown (Design, Clash Detection, 4D Scheduling)",
@@ -526,9 +560,10 @@ export const portfolioData: ProfileData = {
       tagline: "Industrial Infrastructure & Technical Consulting",
       url: "https://etolum.vercel.app",
       repoUrl: "https://github.com/Bfranky/etolum",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fetolum.vercel.app?w=800",
       description: "Industrial infrastructure & engineering consultancy firm website featuring corporate credentials, project milestone tracking, and safety compliance dossiers.",
       category: "Enterprise & SaaS",
-      stack: ["Next.js", "Webpack / Tailwind v3", "Corporate UI"],
+      stack: ["Next.js", "React", "Webpack / Tailwind v3", "Corporate UI"],
       featured: false,
       features: [
         "Detailed infrastructure projects directory by industrial sector",
@@ -546,9 +581,10 @@ export const portfolioData: ProfileData = {
       tagline: "Systems Architecture & Enterprise Tech Consulting",
       url: "https://gineer.vercel.app",
       repoUrl: "https://github.com/Bfranky/gineer",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fgineer.vercel.app?w=800",
       description: "Clean, technical engineering advisory portal showcasing systems architecture, consulting services, and enterprise client engagement pipelines.",
       category: "Enterprise & SaaS",
-      stack: ["Next.js", "Technical UI", "React", "Tailwind CSS"],
+      stack: ["Next.js", "React", "Technical UI", "Tailwind CSS"],
       featured: false,
       features: [
         "Technical service offerings categorized by maturity phase",
@@ -566,9 +602,10 @@ export const portfolioData: ProfileData = {
       tagline: "Brand Strategy, Media & Creative Production Agency",
       url: "https://jks-blaze.vercel.app",
       repoUrl: "https://github.com/Bfranky/jks-blaze",
+      screenshotUrl: "https://s0.wp.com/mshots/v1/https%3A%2F%2Fjks-blaze.vercel.app?w=800",
       description: "High-impact creative production portfolio featuring bold typography, immersive video embeds, case study deep-dives, and client brand showcases.",
       category: "Enterprise & SaaS",
-      stack: ["Next.js", "Creative Direction", "React", "Tailwind CSS"],
+      stack: ["Next.js", "React", "Creative Direction", "Tailwind CSS"],
       featured: false,
       features: [
         "Bold editorial typography with dark aesthetic",

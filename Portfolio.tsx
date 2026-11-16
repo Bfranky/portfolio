@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import styles from './Portfolio.module.css';
 import { portfolioData, ProfileData, Project } from './portfolioData';
 import {
-  ExternalLinkIcon,
   ArrowUpRightIcon,
   GithubIcon,
   SearchIcon,
@@ -14,8 +13,6 @@ import {
   CheckIcon,
   GridIcon,
   ListIcon,
-  MoonIcon,
-  SunIcon,
   ZapIcon,
   ClockIcon,
   ShieldIcon,
@@ -25,7 +22,9 @@ import {
   MonitorIcon,
   SmartphoneIcon,
   TabletIcon,
-  CodeIcon
+  CodeIcon,
+  CameraIcon,
+  VideoIcon
 } from './Icons';
 
 interface PortfolioProps {
@@ -33,8 +32,12 @@ interface PortfolioProps {
 }
 
 export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) => {
-  // Theme state
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  // Profile Avatar state with local preview & persistence support
+  const [avatarSrc, setAvatarSrc] = useState<string>(() => {
+    return localStorage.getItem('bfranky_portfolio_avatar') || data.avatarUrl || '/profile.svg';
+  });
+  const [avatarError, setAvatarError] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Search & Filtering states
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -45,33 +48,39 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
   const [activeProjectModal, setActiveProjectModal] = useState<Project | null>(null);
   const [deviceMode, setDeviceMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
 
-  // Command Palette (Cmd+K) state
-  const [isCmdOpen, setIsCmdOpen] = useState<boolean>(false);
-  const [cmdSearch, setCmdSearch] = useState<string>('');
-
   // Toast state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Selected Inquiry Pill for WhatsApp customization
-  const [selectedInquiry, setSelectedInquiry] = useState<string>('Next.js Web Platform');
+  const [selectedInquiry, setSelectedInquiry] = useState<string>('Next.js & TanStack Web App');
 
   // Live Time clock state (WAT, UTC+1)
   const [currentTimeWAT, setCurrentTimeWAT] = useState<string>('');
 
-  // Set theme on body / container
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  // Handle Photo Upload / Change in browser
+  const handleAvatarFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        setAvatarSrc(result);
+        setAvatarError(false);
+        try {
+          localStorage.setItem('bfranky_portfolio_avatar', result);
+        } catch {
+          // LocalStorage quota might be exceeded for high-res images
+        }
+        showToast('Profile picture updated successfully!');
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   // Live Time clock updater
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      // Lagos, Nigeria is UTC+1 (WAT)
       const options: Intl.DateTimeFormatOptions = {
         timeZone: 'Africa/Lagos',
         hour: '2-digit',
@@ -86,22 +95,6 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
-  }, []);
-
-  // Keyboard shortcut listener (Cmd+K / Ctrl+K and Escape)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        setIsCmdOpen((prev) => !prev);
-      } else if (e.key === 'Escape') {
-        setIsCmdOpen(false);
-        setActiveProjectModal(null);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   // Trigger Toast Notification
@@ -121,8 +114,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
 
   // Categories list
   const categories = useMemo(() => {
-    const cats = ['All', 'Healthcare', 'Hospitality & Dining', 'Enterprise & SaaS', 'E-Commerce & Retail', 'EdTech & Media'];
-    return cats;
+    return ['All', 'Healthcare', 'Hospitality & Dining', 'Enterprise & SaaS', 'E-Commerce & Retail', 'EdTech & Media'];
   }, []);
 
   // Featured Projects (Flagships)
@@ -147,19 +139,6 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
     });
   }, [data.projects, selectedCategory, searchQuery]);
 
-  // Command palette search results
-  const cmdResults = useMemo(() => {
-    if (!cmdSearch.trim()) return data.projects.slice(0, 8);
-    const q = cmdSearch.toLowerCase().trim();
-    return data.projects.filter(
-      (p) =>
-        p.title.toLowerCase().includes(q) ||
-        p.tagline.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q) ||
-        p.stack.some((t) => t.toLowerCase().includes(q))
-    );
-  }, [data.projects, cmdSearch]);
-
   // Dynamic WhatsApp URL based on inquiry selection
   const customizedWhatsAppUrl = useMemo(() => {
     const text = encodeURIComponent(
@@ -168,7 +147,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
     return `https://wa.me/2349069321502?text=${text}`;
   }, [selectedInquiry]);
 
-  // Helper for simulated device width
+  // Helper for simulated device width in modal
   const getDeviceWidth = () => {
     switch (deviceMode) {
       case 'mobile':
@@ -182,20 +161,35 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
   };
 
   return (
-    <div className={styles.container} data-theme={theme}>
+    <div className={styles.container}>
       {/* Ambient background mesh */}
       <div className={styles.meshBackground} />
 
       {/* ====================================================================
-          Sticky Floating Glass Navbar
+          Sticky Floating Navbar (Cleaned: Search/Theme/Let's Talk removed)
           ==================================================================== */}
       <nav className={styles.navbarSticky}>
         <div className={styles.navbarInner}>
           <a href="#" className={styles.brand}>
-            <div className={styles.brandAvatar}>BO</div>
+            {!avatarError ? (
+              <img
+                src={avatarSrc}
+                alt={data.name}
+                className={styles.brandAvatarImg}
+                onError={() => {
+                  if (avatarSrc !== '/profile.svg') {
+                    setAvatarSrc('/profile.svg');
+                  } else {
+                    setAvatarError(true);
+                  }
+                }}
+              />
+            ) : (
+              <div className={styles.brandAvatarFallback}>BO</div>
+            )}
             <div className={styles.brandText}>
               <span className={styles.brandName}>{data.name}</span>
-              <span className={styles.brandRole}>{data.roleHeadline}</span>
+              <span className={styles.brandRole}>React · TanStack · Next.js</span>
             </div>
           </a>
 
@@ -216,61 +210,62 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
               Contact
             </a>
           </div>
-
-          <div className={styles.navActions}>
-            <button
-              className={styles.searchPill}
-              onClick={() => setIsCmdOpen(true)}
-              title="Search all projects (Cmd+K)"
-            >
-              <SearchIcon size={14} />
-              <span>Search</span>
-              <span className={styles.kbd}>⌘K</span>
-            </button>
-
-            <button
-              className={styles.iconBtn}
-              onClick={toggleTheme}
-              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? <SunIcon size={16} /> : <MoonIcon size={16} />}
-            </button>
-
-            <a
-              href={customizedWhatsAppUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.navCta}
-            >
-              <MessageCircleIcon size={14} />
-              <span>Let's Talk</span>
-            </a>
-          </div>
         </div>
       </nav>
 
       {/* Main Content Container */}
       <div className={styles.contentWrapper}>
         {/* ==================================================================
-            Hero Section
+            Hero Section (Featuring Profile Picture & React/TanStack/Next.js)
             ================================================================== */}
         <header className={styles.hero}>
-          <div className={styles.statusBadge}>
-            <span className={styles.pulseDot} />
-            <span>Available for Q1/Q2 Production Projects & Contracts</span>
+          {/* Profile Picture with Instant Change Support */}
+          <div className={styles.heroProfileWrapper}>
+            <div
+              className={styles.heroAvatarContainer}
+              onClick={() => fileInputRef.current?.click()}
+              title="Click to change profile picture"
+            >
+              <img
+                src={avatarSrc}
+                alt={data.name}
+                className={styles.heroAvatarImg}
+                onError={() => {
+                  if (avatarSrc !== '/profile.svg') {
+                    setAvatarSrc('/profile.svg');
+                  }
+                }}
+              />
+              <div className={styles.avatarUploadBadge} title="Upload your photo">
+                <CameraIcon size={16} />
+              </div>
+            </div>
+
+            {/* Hidden file input for picture upload */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              className={styles.hiddenFileInput}
+              onChange={handleAvatarFileChange}
+            />
+
+            <div className={styles.statusBadge}>
+              <span className={styles.pulseDot} />
+              <span>Available for Q1/Q2 Production Projects & Contracts</span>
+            </div>
           </div>
 
           <h1 className={styles.heroTitle}>
-            <span className={styles.gradientText}>Architecting High-Impact</span>
+            <span className={styles.gradientText}>Architecting High-Performance</span>
             <br />
-            <span className={styles.gradientHighlight}>Web Platforms & Next.js Apps</span>
+            <span className={styles.gradientHighlight}>Web Platforms with React, TanStack & Next.js</span>
           </h1>
 
           <p className={styles.heroBio}>
-            Hi, I’m <strong>{data.name}</strong>. I design, build, and deploy production systems — from
-            complex healthcare clinical portals and real-time dining reservation engines to automotive showrooms
-            and high-conversion SaaS web applications.
+            Hi, I’m <strong>{data.name}</strong>. I specialize in <strong>React</strong> and the <strong>TanStack</strong> ecosystem
+            (TanStack Query, TanStack Table), and mainly run on <strong>Next.js</strong> to build and ship production web platforms.
+            From multi-role clinical healthcare portals and real-time dining reservation engines to automotive showrooms and high-conversion SaaS web applications.
           </p>
 
           <div className={styles.heroActions}>
@@ -309,7 +304,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
         </header>
 
         {/* ==================================================================
-            Featured / Flagship Projects Bento
+            Featured / Flagship Projects Bento (With Live Screenshot / Video)
             ================================================================== */}
         <section id="featured" className={styles.sectionHeader}>
           <div className={styles.sectionEyebrow}>
@@ -318,8 +313,8 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
           </div>
           <h2 className={styles.sectionTitle}>Featured Production Work</h2>
           <p className={styles.sectionDesc}>
-            Deep-dive into flagship production platforms built from ground-up, tested under real-world
-            user scenarios, and optimized for maximum speed and conversion.
+            Hover over any project preview below to watch the live webpage scroll smoothly like a video recording,
+            or click to inspect the responsive device layout.
           </p>
         </section>
 
@@ -338,18 +333,46 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
                 </div>
               </div>
 
-              {/* Visual Banner */}
+              {/* Visual Banner with Video / Live Screenshot Preview */}
               <div
                 className={styles.cardVisualBanner}
-                style={{ background: project.demoGradient }}
+                onClick={() => setActiveProjectModal(project)}
+                title="Click to inspect live interactive preview"
               >
-                <div className={styles.bannerOverlay} />
-                {project.highlightMetric && (
-                  <span className={styles.badgePill}>
-                    <ShieldIcon size={12} />
-                    {project.highlightMetric}
-                  </span>
+                {project.videoUrl ? (
+                  <video
+                    src={project.videoUrl}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className={styles.cardVideo}
+                  />
+                ) : (
+                  <img
+                    src={project.screenshotUrl}
+                    alt={`${project.title} live preview`}
+                    className={styles.cardPreviewImg}
+                    loading="lazy"
+                    onError={(e) => {
+                      // Fallback gradient if external screenshot service is slow
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
                 )}
+
+                <div className={styles.previewOverlayBadges}>
+                  {project.highlightMetric && (
+                    <span className={styles.badgePill}>
+                      <ShieldIcon size={12} />
+                      {project.highlightMetric}
+                    </span>
+                  )}
+                  <span className={styles.videoHintBadge}>
+                    <VideoIcon size={11} />
+                    <span>Live Preview</span>
+                  </span>
+                </div>
               </div>
 
               {/* Body */}
@@ -427,8 +450,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
             </div>
             <h2 className={styles.sectionTitle}>All Production Deployments ({data.projects.length})</h2>
             <p className={styles.sectionDesc}>
-              Every single application listed below is deployed live on Vercel. Filter by vertical,
-              search by stack or feature, and preview device responses.
+              Every single application listed below is deployed live on Vercel with real-time screenshots and responsive interactions.
             </p>
           </div>
 
@@ -457,7 +479,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
                 </span>
                 <input
                   type="text"
-                  placeholder="Filter by name, tech (e.g. Supabase, Tailwind, Next.js), or domain..."
+                  placeholder="Filter by name, tech (e.g. TanStack, Supabase, Next.js), or domain..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={styles.searchInput}
@@ -493,60 +515,79 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
             </div>
           </div>
 
-          {/* Grid View */}
+          {/* Grid View with Screenshots */}
           {viewMode === 'grid' && (
             <div className={styles.projectsGrid}>
               {filteredProjects.map((project) => (
                 <article key={project.id} className={styles.projectCard}>
-                  <div className={styles.projectTopRow}>
-                    <span className={styles.projectCategoryBadge}>{project.category}</span>
-                    <span className={styles.pulseActiveDot} title="Live on Vercel" />
+                  {/* Mini Screenshot Banner */}
+                  <div
+                    className={styles.miniCardBanner}
+                    onClick={() => setActiveProjectModal(project)}
+                    title="Click to inspect"
+                  >
+                    <img
+                      src={project.screenshotUrl}
+                      alt={project.title}
+                      className={styles.cardPreviewImg}
+                      loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
                   </div>
 
-                  <h4 className={styles.projectCardTitle}>{project.title}</h4>
-                  <div className={styles.projectCardTagline}>{project.tagline}</div>
-                  <p className={styles.projectCardDesc}>{project.description}</p>
+                  <div className={styles.projectCardContent}>
+                    <div className={styles.projectTopRow}>
+                      <span className={styles.projectCategoryBadge}>{project.category}</span>
+                      <span className={styles.pulseActiveDot} title="Live on Vercel" />
+                    </div>
 
-                  <div className={styles.projectCardTags}>
-                    {project.stack.map((t) => (
-                      <span key={t} className={styles.miniTag}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+                    <h4 className={styles.projectCardTitle}>{project.title}</h4>
+                    <div className={styles.projectCardTagline}>{project.tagline}</div>
+                    <p className={styles.projectCardDesc}>{project.description}</p>
 
-                  <div className={styles.projectCardFooter}>
-                    <div className={styles.cardQuickActions}>
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.linkButton}
-                      >
-                        <span>Live Site</span>
-                        <ArrowUpRightIcon size={13} />
-                      </a>
+                    <div className={styles.projectCardTags}>
+                      {project.stack.map((t) => (
+                        <span key={t} className={styles.miniTag}>
+                          {t}
+                        </span>
+                      ))}
+                    </div>
 
-                      {project.repoUrl && (
+                    <div className={styles.projectCardFooter}>
+                      <div className={styles.cardQuickActions}>
                         <a
-                          href={project.repoUrl}
+                          href={project.url}
                           target="_blank"
                           rel="noopener noreferrer"
                           className={styles.linkButton}
-                          title="GitHub Source"
                         >
-                          <GithubIcon size={13} />
+                          <span>Live Site</span>
+                          <ArrowUpRightIcon size={13} />
                         </a>
-                      )}
-                    </div>
 
-                    <button
-                      className={styles.inspectSmallBtn}
-                      onClick={() => setActiveProjectModal(project)}
-                    >
-                      <MonitorIcon size={13} />
-                      <span>Inspect</span>
-                    </button>
+                        {project.repoUrl && (
+                          <a
+                            href={project.repoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.linkButton}
+                            title="GitHub Source"
+                          >
+                            <GithubIcon size={13} />
+                          </a>
+                        )}
+                      </div>
+
+                      <button
+                        className={styles.inspectSmallBtn}
+                        onClick={() => setActiveProjectModal(project)}
+                      >
+                        <MonitorIcon size={13} />
+                        <span>Inspect</span>
+                      </button>
+                    </div>
                   </div>
                 </article>
               ))}
@@ -625,7 +666,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
         </section>
 
         {/* ==================================================================
-            Skills & Architecture Bento
+            Skills & Architecture Bento (React · TanStack · Next.js)
             ================================================================== */}
         <section id="skills" className={styles.skillsSection}>
           <div className={styles.sectionHeader}>
@@ -635,7 +676,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
             </div>
             <h2 className={styles.sectionTitle}>Engineering Architecture & Tooling</h2>
             <p className={styles.sectionDesc}>
-              A battle-tested tech stack optimized for maintainability, zero-latency rendering, and rapid product shipment.
+              A battle-tested tech stack specialized in <strong>React</strong> and <strong>TanStack</strong>, driven primarily by <strong>Next.js</strong> for zero-latency rendering and rapid shipment.
             </p>
           </div>
 
@@ -731,7 +772,7 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
               <div className={styles.inquiryPillsTitle}>What are you looking to build?</div>
               <div className={styles.inquiryPills}>
                 {[
-                  'Next.js Web Platform',
+                  'Next.js & TanStack Web App',
                   'Healthcare / Clinic Portal',
                   'Dining & Reservation System',
                   'E-Commerce & Retail Store',
@@ -914,7 +955,6 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
                     transition: 'max-width 0.3s ease'
                   }}
                 >
-                  {/* Graceful iframe simulation with direct launch fallback */}
                   <iframe
                     src={activeProjectModal.url}
                     title={activeProjectModal.title}
@@ -1009,66 +1049,6 @@ export const Portfolio: React.FC<PortfolioProps> = ({ data = portfolioData }) =>
                   <span>Copy URL</span>
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ====================================================================
-          Command Palette (Cmd+K / Search Modal)
-          ==================================================================== */}
-      {isCmdOpen && (
-        <div
-          className={styles.cmdPaletteOverlay}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setIsCmdOpen(false);
-          }}
-        >
-          <div className={styles.cmdPaletteBox}>
-            <div className={styles.cmdInputBar}>
-              <SearchIcon size={18} />
-              <input
-                type="text"
-                placeholder="Search projects by name, technology, or category..."
-                value={cmdSearch}
-                onChange={(e) => setCmdSearch(e.target.value)}
-                autoFocus
-                className={styles.cmdInput}
-              />
-              <button
-                className={styles.modalCloseBtn}
-                onClick={() => setIsCmdOpen(false)}
-                style={{ width: '28px', height: '28px' }}
-              >
-                <CloseIcon size={14} />
-              </button>
-            </div>
-
-            <div className={styles.cmdResultsList}>
-              {cmdResults.length === 0 ? (
-                <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-dim)', fontSize: '14px' }}>
-                  No matching projects found.
-                </div>
-              ) : (
-                cmdResults.map((project) => (
-                  <div
-                    key={project.id}
-                    className={styles.cmdItem}
-                    onClick={() => {
-                      setIsCmdOpen(false);
-                      setActiveProjectModal(project);
-                    }}
-                  >
-                    <div className={styles.cmdItemLeft}>
-                      <span className={styles.cmdItemTitle}>{project.title}</span>
-                      <span className={styles.cmdItemCategory}>
-                        {project.category} · {project.stack.slice(0, 3).join(', ')}
-                      </span>
-                    </div>
-                    <span className={styles.cmdItemRight}>Inspect ↗</span>
-                  </div>
-                ))
-              )}
             </div>
           </div>
         </div>
