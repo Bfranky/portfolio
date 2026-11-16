@@ -485,3 +485,21 @@ export const VideoIcon: React.FC<IconProps> = ({ className = '', size = 18 }) =>
     <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
   </svg>
 );
+
+export const MenuIcon: React.FC<IconProps> = ({ className = '', size = 18 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <line x1="3" y1="12" x2="21" y2="12" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <line x1="3" y1="18" x2="21" y2="18" />
+  </svg>
+);
